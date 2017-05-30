@@ -1,0 +1,301 @@
+---
+title: |
+ | UNIVERSIDADE FEDERAL DO AMAZONAS
+ | INSTITUTO DE CIÊNCIAS EXATAS
+ | BACHARELADO EM MATEMÁTICA
+subtitle: | 
+    | LABORATÓRIO DE FÍSICA II
+    | RELATÓRIO III - Oscilações Forçadas
+author: | 
+    | Diego Carvalho Soares - 21555228
+    | Gabriel Bezerra de M. Armelin - 21550325
+    | Jonas Miranda Cascais Júnior - 21553844
+framework: io2012
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    pandoc_args: [
+      "--number-sections",
+      "--number-offset=1"
+    ]
+    # number_sections: false
+    template: template.latex
+    latex_engine: xelatex
+documentclass: report
+fontsize: 11pt
+geometry: top=3cm, left=2.5cm, right=2.5cm, bottom=2.5cm
+papersize: a4paper
+professor: Prof. Daniela Menegon Trichês
+city: Manaus
+year: 2016
+bibliography: bibliography.bib
+mode: selfcontained
+#header-includes: 
+#    - \usepackage{verbatim}
+#    - \usepackage[utf8]{inputenc}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{indentfirst}  
+    # - \usepackage{mathtools}       
+    # - \usepackage[T1]{fontenc}     
+    # - \usepackage{multicol}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{bbm}
+    # - \usepackage{commath}
+    # - \usepackage{graphicx, color}
+    # - \setlength{\parskip}{0.3cm}
+    # - \usepackage{tikz}
+nocite: | 
+  @ref1, @ref2, @ref3
+---
+
+
+```{r setup, include=FALSE}
+suppressWarnings(library("knitr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("grid"))
+suppressWarnings(library("gridExtra"))
+suppressWarnings(library("tikzDevice"))
+suppressWarnings(library("xtable"))
+suppressWarnings(library("printr"))
+suppressWarnings(library("matrixStats"))
+suppressWarnings(library("scales"))
+suppressWarnings(library("NISTunits"))
+
+opts_chunk$set(dev = 'pdf')
+set.seed(12432) 
+
+decimalDigits <- 3
+options(digits = decimalDigits) 
+#options(tikzDefaultEngine="xetex")
+#options(encoding = "UTF-8")
+
+opts_chunk$set(comment=NA, collapse=T, cache=F, autodep=T,
+               dev="tikz", fig.width=4.5, fig.height=2.75,
+               size ='footnotesize',
+               dev.args=list(pointsize=9),
+               message=F, warning=F, autodep=T)
+```
+
+
+RESUMO
+===================
+
+Este trabalho apresenta as velocidades e frequências de oscilação de um sistema executando oscilações forçadas e com a frequência do vibrador em resonância com a frequência natural do barbante. 
+
+INTRODUÇÃO
+===================
+
+O objetivo deste trabalho é utilizar na prática os conceitos de ondas estacionários em ressonância visto em sala de aula. Para isso, realizamos um experimento no laboratório de física que mostra como uma onda estacionária é formada a partir das frequências naturais de um barbante com uma frequência externa gerada por uma força externa. A seção de teoria explica a base teórica deste experimento, assim como, as equações necessárias para calcular a tração sofrida pela corda, a velocidade de onda e a frequência de oscilação. A seção de tratamento de dados, apresenta uma tabela contendo os dados coletados durante a realização do experimento, assim como, os dados obtidos a partir das equações descritas na seção da teoria. Por fim, concluímos realizando a interpretação dos dados obtidos e respondendo uma questão.
+
+
+FUNDAMENTOS TEÓRICOS
+===================
+
+## Teoria
+
+De acordo [@ref2], um sistema é dito executar oscilações forçadas quando ele sofre influências de forças períodicas externas. Há dois tipos de freqências angulares neste sistema: a frequência angular natural do sistema e a frequência angular da força externa. Quando a frequência natural é igual a frequência da força externa, dizemos que o sistema está em ressonância. 
+
+Neste caso, formam-se ondas estacionárias. Medindo-se o comprimento entre dois nóis adjacentes, pode-se determinar o comprimento de onda multiplicando o valor obtido por 2.
+
+Utilizando a equação \ref{eq:velocidadeOnda} (ver demonstração em @ref2) é possível determinar a velocidade da onda.
+
+\begin{align}\label{eq:velocidadeOnda}
+v = \sqrt{\frac{T}{\mu}}
+\end{align}
+
+Onde:
+v: é a velocidade da onda em uma corda esticada;
+
+T: tração sofrida pela corda;
+
+$\mu$: é a massa específica linear da corda;
+
+No caso do experimento realizado neste trabalho, a tração é equivalente a força peso exercida pelo porta-peso e pelas massas adicionadas a ele. Portanto, a equação seguinte apresenta como calcular a tração na corda:
+
+\begin{align}\label{eq:Tracao}
+T = P = mg
+\end{align}
+
+Onde:
+
+T = é a tração.
+
+P = força peso.
+
+m = é a massa.
+
+g = aceleração da gravidade. Foi considerado 9,8 ± 0.1 $m/s^2$.
+
+Pode-se obter a massa específica linear da corda através da equação \ref{eq:massaEspecificaLinear}. 
+\begin{align}\label{eq:massaEspecificaLinear}
+\mu = \frac{m_c}{l_c}
+\end{align}
+
+Onde:
+
+$\mu$: é a massa específica linear.
+
+$m_c$: é a massa da corda (ou barbante).
+
+$l_c$: é o comprimento da corda.
+
+A frequência é calculada utilizando a fórmula:
+
+\begin{align}\label{eq:frequencia}
+f = \frac{v}{\lambda}
+\end{align}
+
+Onde:
+
+f: é a frequência da onda.
+
+v: é a velocidade da onda na corda.
+
+$\lambda$: é comprimento de onda.
+
+## Propagação de erro
+
+Para a estimativa de erro da tração, calculamos a derivada da equação \ref{eq:Tracao}:
+
+\begin{align}\label{eq:erroTracao1}
+\delta{T} = \abs{\pdv{T}{m}}\delta{m}
+\end{align}
+
+\begin{align}\label{eq:erroTracao2}
+\delta{T} = 9.8 * \delta{m} && 
+\end{align}
+
+$\delta{m}$ é o valor da incerteza da massa pois só foi coletado uma amostra e não é possível usar o desvio padrão.
+
+\begin{align}\label{eq:erroTracao3}
+T \pm \delta{T}
+\end{align}
+
+Para a estimativa de erro da velocidade, calculamos a derivada da equação \ref{eq:velocidadeOnda}
+
+\begin{align}\label{eq:erroVelocidade0}
+\delta{v} = \abs{\pdv{v}{T}}\delta{T}
+\end{align}
+
+\begin{align}\label{eq:erroVelocidade1}
+\delta{v} = \abs{\frac{1}{2\mu}\sqrt{\frac{\mu}{T}}}\delta{T}
+\end{align}
+
+$\delta{T}$ é o valor da incerteza da tração pois só foi coletado uma amostra e não é possível usar o desvio padrão.
+
+\begin{align}\label{eq:erroVelocidade2}
+v \pm \delta{v}
+\end{align}
+
+Para a estimativa de erro da frequência, calculamos a derivada da equação \ref{eq:frequencia}
+
+\begin{align}\label{eq:erroFrequencia1}
+\delta{f} = \abs{\pdv{f}{v}}\delta{v} + \abs{\pdv{f}{\lambda}}\delta{\lambda}
+\end{align}
+
+\begin{align}\label{eq:erroFrequencia1}
+\delta{f} = \abs{\frac{1}{\lambda}}\delta{v} + \abs{v\log{\lambda}}\delta{\lambda}
+\end{align}
+
+$\delta{v}$ e $\delta{\lambda}$ são os valores das incertezas do comprimento da velocidade e do comprimento da corda respectivamente.
+
+PROCEDIMENTO EXPERIMENTAL
+===================
+
+## Materias utilizados
+
+* 1 Motor vibrador.
+
+* 1 porta peso de 10g.
+
+* 5 massas de 10g cada.
+
+* 1 polia.
+
+* 1 régua milimetrada com dois cursores.
+
+* 1 barbante de 3.1 ± 0,1g de massa e de 2.18 ± 0.01 de comprimento.
+
+## Método do Experimento
+
+1. Colocar no porta peso uma massa.
+
+2. Ajustar a frequência do vibrador até obter uma onda estacionária.
+
+3. Medir a distância entre os nós com a régua milimetrada.
+
+4. Repetir os passos anteriores por 4 vezes.
+
+RESULTADOS
+====================
+
+```{r echo=F, results="asis"}
+MassaBarbante <- 3.1 / 1000
+ComprimentoBarbante <- 2.18
+DensidadeBarbante <- MassaBarbante / ComprimentoBarbante
+expData <- data.frame(Massa=c(20, 30, 40, 50, 60),
+                      Comprimento=c(442, 437, 432, 430, 430))
+expData$Massa <- expData$Massa / 1000
+expData$Comprimento <- (expData$Comprimento / 1000) * 2
+
+expData$Tracao <- round(expData$Massa*9.8, digits=2)
+expData$TracaoErro <- paste(format(expData$Tracao, nsmall=2), "±", format(9.8*0.1, nsmall=2))
+
+expData$Velocidade <- round(sqrt(expData$Tracao / DensidadeBarbante), digits = 2)
+VelocidadeErro <- round((1/(2*DensidadeBarbante))*(DensidadeBarbante/expData$Tracao)^(1/2)*0.01, digits=2)
+expData$VelocidadeErro <- paste(format(expData$Velocidade, nsmall=2), "±", format(VelocidadeErro, nsmall=2))
+
+expData$Frequencia <- round(expData$Velocidade / expData$Comprimento, digits=2)
+FrequenciaErro <- round(abs((1/expData$Comprimento)*0.01)+abs(expData$Velocidade*log(expData$Comprimento))*0.001, digits=2)
+expData$FrequenciaErro <- paste(format(expData$Frequencia, nsmall=2), "±", format(FrequenciaErro, nsmall=2))
+
+varNamesExp <- c("Massa ± 0.001 (kg)", "Comprimento ± 0.001 (m)", "Tracao ± 0.01 (N)", "Velocidade ± 0.01 (m/s)", "Frequencia ± 0.01 (Hz)")
+xt <- xtable(
+    expData[,c("Massa", "Comprimento", "TracaoErro", "VelocidadeErro", "FrequenciaErro")]
+    ,colnames=varNamesExp
+    ,caption='Dados experimentais'
+    ,align=c('lccccc')
+    ,digits=c(decimalDigits)
+    )
+names(xt) <- varNamesExp
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.8'
+    )
+
+```
+
+Onde:
+
+Massa: é a massa adicionada para manter a corda tracionada;
+
+Comprimento: é o comprimento de onda. Durante o experimento foi medido o comprimento entre nós e este valor foi multiplicado por 2 para obter o comprimento de onda apresentado na tabela acima.
+
+Tração: é a tração da corda. Seu valor foi obtido de acordo com a equação \ref{eq:Tracao} e seu erro foi calculado de acordo com a equação \ref{eq:erroTracao2}
+
+Velocidade: é a velocidade de propagação da corda. Seu valor foi obtido utilizando a equação \ref{eq:velocidadeOnda} e seu erro foi obtido utilizando a equação da fórmula \ref{eq:erroVelocidade1}.
+
+Frequência: é a frequência da onda. Seu valor foi calculado utilizando a equação \ref{eq:frequencia} e seu erro foi calculado utilizando a equação \ref{eq:erroFrequencia1}.
+
+
+CONCLUSÃO
+====================
+
+De acordo com os dados apresentados, à medida que aumentamos a quantidade de massa no porta-peso, o comprimento de onda diminuiu, a tração aumentou, a velocidade da onda aumentou e a frequência aumentou.
+
+Quais são as variáveis que influem na frequência de vibração do barbante? E na de uma corda de violão? A frequência de ambas as cordas é fixada inteiramente pela força externa que as produzem.
+
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+===

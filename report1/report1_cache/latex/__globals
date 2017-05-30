@@ -1,0 +1,2 @@
+unnamed-chunk-3	^	$	$<-	as.matrix	c	data.frame	dfExp1	F	log10	mean	names<-	pi	print	round	rowMeans	rowSds	T	varNamesExp1	xtable
+unnamed-chunk-4	^	~	$	$<-	aes	coef	data.frame	dfExp2	geom_line	geom_point	ggplot	ggtitle	lm	MassaLog	max	min	PeriodoLog	pi	predict	round	seq	theme_bw	xlab	ylab

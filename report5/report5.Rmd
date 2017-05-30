@@ -1,0 +1,208 @@
+---
+title: |
+ | UNIVERSIDADE FEDERAL DO AMAZONAS
+ | INSTITUTO DE CIÊNCIAS EXATAS
+ | BACHARELADO EM MATEMÁTICA
+subtitle: | 
+    | LABORATÓRIO DE FÍSICA II
+    | RELATÓRIO V - DILATAÇÃO TÉRMICA
+author: | 
+    | Gabriel Bezerra de M. Armelin - 21550325
+    | Jonas Miranda Cascais Júnior - 21553844
+framework: io2012
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    pandoc_args: [
+      "--number-sections",
+      "--number-offset=1"
+    ]
+    # number_sections: false
+    template: template.latex
+    latex_engine: xelatex
+documentclass: report
+fontsize: 11pt
+geometry: top=3cm, left=2.5cm, right=2.5cm, bottom=2.5cm
+papersize: a4paper
+professor: Prof. Daniela Menegon Trichês
+city: Manaus
+year: 2017
+bibliography: bibliography.bib
+mode: selfcontained
+#header-includes: 
+#    - \usepackage{verbatim}
+#    - \usepackage[utf8]{inputenc}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{indentfirst}  
+    # - \usepackage{mathtools}       
+    # - \usepackage[T1]{fontenc}     
+    # - \usepackage{multicol}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{bbm}
+    # - \usepackage{commath}
+    # - \usepackage{graphicx, color}
+    # - \setlength{\parskip}{0.3cm}
+    # - \usepackage{tikz}
+nocite: | 
+  @ref1, @ref2, @ref3
+---
+
+
+```{r setup, include=FALSE}
+suppressWarnings(library("knitr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("grid"))
+suppressWarnings(library("gridExtra"))
+suppressWarnings(library("tikzDevice"))
+suppressWarnings(library("xtable"))
+suppressWarnings(library("printr"))
+suppressWarnings(library("matrixStats"))
+suppressWarnings(library("scales"))
+suppressWarnings(library("NISTunits"))
+
+opts_chunk$set(dev = 'pdf')
+set.seed(12432) 
+
+decimalDigits <- 2
+options(digits = decimalDigits) 
+#options(tikzDefaultEngine="xetex")
+#options(encoding = "UTF-8")
+
+opts_chunk$set(comment=NA, collapse=T, cache=F, autodep=T,
+               dev="tikz", fig.width=4.5, fig.height=2.75,
+               size ='footnotesize',
+               dev.args=list(pointsize=9),
+               message=F, warning=F, autodep=T)
+```
+
+
+RESUMO
+====================
+
+Este trabalho apresenta um método para determinar o coeficiente de dilatação linear térmica para três materias diferentes: aço, cobre e latão. Em seguida, comparamos os valores obtidos experimentalmente com os obtidos em um site de referência. Verificamos que os valores obtidos experimentalmente ficaram bem próximos do site de referência no entanto, fora da margem de erro.
+
+INTRODUÇÃO
+====================
+
+O objetivo deste trabalho é verificar na prática o efeito que a temperatura provoca nos corpos e determinar o coeficiente de dilatação linear para o aço, latão e cobre. Para isto, dividimos este relatório em seções. Na seção denominada teoria mostramos como realizamos o cálculo do coeficiente linear e os cálculos de propagação de erros. Na seção de procedimento experimental detalhamos os materias e como realizamos o experimento. Na seção de resultados, apresentamos os valores obtidos experimentalmente assim como o valor do coeficiente de dilatação linear para cada corpo e o erro obtido. Por fim, na seção conclusão apresentamos coeficientes de dilatação linear pesquisados na Internet e comparamos com os valores obtidos experimentalmente.
+
+FUNDAMENTOS TEÓRICOS
+====================
+
+## Teoria
+
+As variações de temperatura geralmente provacam alterações nos tamanhos dos objetos. Portanto, quando um objeto recebe calor, a sua temperatura se eleva, provacando um aumento na intensidade da energia cinética de vibração de suas moléculas, resultando um aumento em suas distâncias médias. Se o corpo é um sólido, aumenta suas dimensões lineares. A variação da dimensão linear de um objeto denomina-se dilatação linear. A dilatação de um corpo é calculada pela seguinte fórmula:
+
+\begin{align}\label{eq:alpha}
+\alpha = \frac{\Delta L}{L_i \Delta T}
+\end{align}
+
+De onde:
+
+$\Delta L$: é a variação de comprimento do corpo antes e após aquecimento;
+
+$L_i$: é o comprimento inicial do corpo;
+
+$\Delta T$: é a variação de temperatura do corpo antes e após aquecimento;
+
+## Propagação de erro
+
+Para a estimativa de propagação de erro, calculamos a derivada da \ref{eq:alpha}. A equação resultante está a seguir:
+
+\begin{align}\label{eq:propagacaoErro}
+\delta{alpha} = \frac{\Delta T L_i \delta{\Delta L} + \Delta L^2 \delta L_i + \Delta L L_i \delta \Delta T}{L_i^2 \Delta t^2}
+\end{align}
+
+
+PROCEDIMENTO EXPERIMENTAL
+====================
+
+## Materias utilizados
+* 1 ebulidor
+
+* 1 extensômetro
+
+* 1 termômetro
+
+* tubos de: aço, cobre e latão.
+
+## Método do Experimento
+
+1. Anote a temperatura inicial do tubo de aço.
+
+2. Meça o comprimento do tubo aço
+
+3. Zere o extensômetro.
+
+4. Ligue o ebulidor até começar a sair vapor de água pela outra extremidade do tubo de aço.
+
+5. Repita os precedimentos acima para os tubos de cobre e latão.
+
+RESULTADOS
+====================
+
+
+```{r echo=F, results="asis"}
+Ti <- c(24.0, 24.0, 24.0)
+Tf <- c(97.0, 97.0, 97.0)
+Li <- c(500, 500, 500)
+Lf <- c(500.46, 500.61, 500.67)
+
+expData <- data.frame( Material=c("Aço", "Cobre", "Latão"),
+                       Ti,
+                       Tf,
+                       Dt=Tf-Ti,
+                       Li,
+                       Lf,
+                       Dl = Lf - Li)
+
+expData$Ti <- round(expData$Ti, digits=2)
+expData$Tf <- round(expData$Tf, digits=2)
+expData$Dt <- round(expData$Dt, digits=2)
+expData$Li <- round(expData$Li, digits=2)
+expData$Lf <- round(expData$Lf, digits=2)
+expData$Dl <- round(expData$Dl, digits=2)
+
+expData$Alpha <- expData$Dl/(expData$Li*expData$Dt) * 10^5
+expData$Alpha <- round(expData$Alpha, digits=2)
+expErro <- (mean(expData$Dt) * mean(expData$Li) * 0.01 + mean(expData$Dl)^2 * 0.01 + mean(expData$Dl) * mean(expData$Li) * 0.01 ) / (mean(expData$Li^2) * mean(expData$Dt^2) ) 
+expErro <- round(expErro, digits=7)
+varNamesExp <- c("Material", "$T_i$ ± 0.01 ($^{\\circ}$C)", "$T_f$ ± 0.01 ($^{\\circ}$C)", "Dt ± 0.01 ($^{\\circ}$C)", "$L_i$ ± 0.01 (mm)", "$L_f$ ± 0.01 (mm)", "Dl ± 0.01 (mm)", "Alpha ($10^{-5}\\degree C^{-1}$)")
+
+xt <- xtable(
+    expData[,c("Material", "Ti", "Tf", "Dt", "Li", "Lf", "Dl", "Alpha")]
+    ,colnames=varNamesExp
+    ,caption='Dados experimentais'
+    ,align=c('lcccccccc')
+    ,digits=c(0,0,2,2,2,2,2,2,2)
+    )
+names(xt) <- varNamesExp
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.65'
+    )
+
+```
+
+O erro calculado pelo método de propagação de erros apresentado na equação \ref{eq:propagacaoErro} é de aproximadamente ± $`r expErro`$ do último dígito da coluna Alpha da tabela acima.
+
+
+CONCLUSÃO
+====================
+
+De acordo com os dados apresentados, os valores dos coeficientes de dilatação linear do aço é `r expData$Alpha[1]`$\times10^{-5}$ ± $`r expErro`$, do cobre é `r expData$Alpha[2]`$\times10^{-5}$ ± $`r expErro`$ e do latão é `r expData$Alpha[3]`$\times10^{-5}$ ± $`r expErro`$. Podemos comparar esses valores experimentais com uma outra fonte. Para isso, escolhemos o site Fisica.net (@fisicanet:1) que contém os valores para cada um destes materias que utilizamos em laboratório. Neste site, o valor dos coeficientes de dilatação linear para o aço é de 1.40, do cobre 1.80 e do latão 1.80. Comparando os valores experimentais com os do site Fisica.net, verificamos que os valores embora próximos são diferentes mesmo considerando a margem de erro calculada. Consideramos que as possíveis fontes de erros são as precisões inadequadas dos instrumentos de medição para este experimento, termômetro e réqua milimétrica. 
+
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+====================

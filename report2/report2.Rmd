@@ -1,0 +1,451 @@
+---
+title: |
+ | UNIVERSIDADE FEDERAL DO AMAZONAS
+ | INSTITUTO DE CIÊNCIAS EXATAS
+ | BACHARELADO EM MATEMÁTICA
+subtitle: | 
+    | LABORATÓRIO DE FÍSICA II
+    | RELATÓRIO II - PÊNDULO SIMPLES
+author: | 
+    | Diego Carvalho Soares - 21555228
+    | Gabriel Bezerra de M. Armelin - 21550325
+    | Jonas Miranda Cascais Júnior - 21553844
+framework: io2012
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    pandoc_args: [
+      "--number-sections",
+      "--number-offset=1"
+    ]
+    # number_sections: false
+    template: template.latex
+    latex_engine: xelatex
+documentclass: report
+fontsize: 11pt
+geometry: top=3cm, left=2.5cm, right=2.5cm, bottom=2.5cm
+papersize: a4paper
+professor: Prof. Daniela Menegon Trichês
+city: Manaus
+year: 2016
+bibliography: bibliography.bib
+mode: selfcontained
+#header-includes: 
+#    - \usepackage{verbatim}
+#    - \usepackage[utf8]{inputenc}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{indentfirst}  
+    # - \usepackage{mathtools}       
+    # - \usepackage[T1]{fontenc}     
+    # - \usepackage{multicol}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{bbm}
+    # - \usepackage{commath}
+    # - \usepackage{graphicx, color}
+    # - \setlength{\parskip}{0.3cm}
+    # - \usepackage{tikz}
+nocite: | 
+  @ref1, @ref2, @ref3
+---
+
+
+```{r setup, include=FALSE}
+suppressWarnings(library("knitr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("grid"))
+suppressWarnings(library("gridExtra"))
+suppressWarnings(library("tikzDevice"))
+suppressWarnings(library("xtable"))
+suppressWarnings(library("printr"))
+suppressWarnings(library("matrixStats"))
+suppressWarnings(library("scales"))
+suppressWarnings(library("NISTunits"))
+
+opts_chunk$set(dev = 'pdf')
+set.seed(12432) 
+
+decimalDigits <- 4
+options(digits = decimalDigits) 
+#options(tikzDefaultEngine="xetex")
+#options(encoding = "UTF-8")
+
+opts_chunk$set(comment=NA, collapse=T, cache=F, autodep=T,
+               dev="tikz", fig.width=4.5, fig.height=2.75,
+               size ='footnotesize',
+               dev.args=list(pointsize=9),
+               message=F, warning=F, autodep=T)
+```
+
+
+RESUMO
+===================
+
+Este relatório apresenta a teoria e prática para a obtenção do valor da aceleração da gravidade local através de duas experiências diferentes utilizando o conceito de pêndulo simples. A primeira experiência consiste em manter fixo em $10\degree$ a inclinação do pêndulo e obter o período do pêndulo variando o comprimento do fio. Com estes dados, pudemos gerar um gráfico relacionando o período com o comprimento do fio. Via regressão linear obtemos uma reta estimada e determinamos a aceleração da gravidade igualando o coeficiente linear desta reta com o equação do período do pêndulo simples. O segundo experimento consiste em manter fixo o tamanho do fio do pêndulo e obter o período do pêndulo variando seu o ângulo de inclinação. Após isso, geramos um gráfico relacionando o período com o $sen^2(\frac{\alpha}{2})$. Com esta relação pudemos obter um equação através de regressão linear e determinar a aceleração da gravidade comparando com a equação proposta na teoria. Os resultados obtidos para a aceleração da gravidade ficaram muito próximos de 9,8 $m/s^2$ sendo o segundo experimento mais preciso que o primeiro.
+
+
+INTRODUÇÃO
+===================
+
+Este trabalho apresenta dois experimentos para obter a aceleração da gravidade localmente utilizando a teoria de pêndulo simples. Estes experimentos foram realizados no laboratório do curso de Física da Universidade Federal do Amazonas.
+
+Para a obtenção das acelerações da gravidade, os alunos realizaram experimentos em laboratório, pesquisaram os fundamentos teóricos, e realizaram a análise de dados obtidos através dos experimentos. As atividades realizadas em cada uma destas etapas estão detalhadas nos textos a seguir para cada experimento.
+
+FUNDAMENTOS TEÓRICOS
+===================
+
+## Experimento I
+
+Este experimento consiste em obter o valor da aceleração da gravidade. Para isso, foram coletados 3 amostras do período do oscilação de pêndulo simples para cada um dos comprimentos 0,5, 0,6, 0,7, 0,8 e 0,9 metros.
+
+Em seguida, obtemos as médias e desvio padrão para um dos comprimentos. Conforme desmostrado abaixo, a inclinação da reta do gráfico $T_{md}$ X Comprimento representa o valor da aceleração da gravidade. A seguir apresentamos como chegamos a esta fórmula.
+
+Primeiramente partimos da fórmula do período de um pêndulo simples:
+
+\begin{align}\label{eq:periodoPenduloSimples}
+T = 2\pi\sqrt{\frac{l}{g}}
+\end{align}
+
+Onde:
+
+$T$: é período do pêndulo;
+
+$l$: é comprimento do barbante;
+
+$g$: é a aceleração da gravidade;
+
+Aplicando o logarítmo nos dois membros:
+
+
+\begin{align}\label{eq:logPeriodoPenduloSimples1}
+log(T) = log(2\pi\sqrt{\frac{l}{g}})
+\end{align}
+
+\begin{align}\label{eq:logPeriodoPenduloSimples2}
+log(T) = log(2\pi) + log(\sqrt{\frac{l}{g}})
+\end{align}
+
+\begin{align}\label{eq:logPeriodoPenduloSimples3}
+log(T) = log(2\pi) + \frac{1}{2}log(l) - \frac{1}{2}log(g)
+\end{align}
+
+\begin{align}\label{eq:logPeriodoPenduloSimples4}
+log(T) = log(\frac{2\pi}{\sqrt{g}}) + \frac{1}{2}log(l)
+\end{align}
+
+A equação \ref{eq:logPeriodoPenduloSimples4} é uma equação linear onde o período depende do comprimento do barbante. Então, ao criar um gráfico Período X Comprimento em escala logarítmica, espera-se encontrar uma reta através de regressão linear. Pode-se encontrar o valor da aceleração da gravidade igualando o coeficiente linear da reta obtida com o coeficiente linear da fórmula \ref{eq:logPeriodoPenduloSimples4}. As equações mostram como a aceleração da gravidade foi obtida através dos dados experimentais:
+
+\begin{align}\label{eq:exp1AceleracaoGravidade1}
+log(\frac{2\pi}{\sqrt{g}}) = cl&& \text{cl é o valor do coeficiente da reta obtidade.}
+\end{align}
+
+\begin{align}\label{eq:exp1AceleracaoGravidade2}
+\frac{2\pi}{\sqrt{g}} = e^{cl}
+\end{align}
+
+\begin{align}\label{eq:exp1AceleracaoGravidade3}
+g = \frac{4\pi^2}{e^{2cl}}
+\end{align}
+
+O cálculo da propagação do erro foi realizado a também partir da fórmula \ref{eq:periodoPenduloSimples} do período do pêndulo simples. Isolando *g* neste equação, obtém-se:
+
+\begin{align}\label{eq:periodoPenduloSimples2}
+g = \frac{4\pi^2l}{T^2}
+\end{align}
+
+Calculando a derivada de *g* em relação à *l* e *T*, obtém-se:
+
+\begin{align}\label{eq:exp1Erro1}
+\Delta g = \abs{\frac{\partial g(l, T)}{\partial l}}\Delta l + \abs{\frac{\partial g(l, T)}{\partial T}}\Delta T
+\end{align}
+
+\begin{align}\label{eq:exp1Erro2}
+\Delta g = \frac{4\pi^2T\Delta{l} + 8\pi^2l\Delta{T}}{T^3}
+\end{align}
+
+## Experimento II
+
+Este segundo experimento utiliza uma equação mais geral para obter o período. Esta equação é utilizada para casos onde o ângulo é maior que $10\degree$ pois a partir deste valor, o seno $\alpha$ passa a divergir significativamente de $\alpha$. Ela é apresentada a seguir:
+
+\begin{align}\label{eq:periodoGeral}
+T = 2\pi\sqrt{\frac{l}{g}} + \frac{\pi}{2}\sqrt{\frac{l}{g}}seno^2{\frac{\alpha}{2}}
+\end{align}
+
+Então, a partir dos dados experimentais é criado um gráfico relacionando o período médio com o seno^2 da metade ângulo. A partir deste gráfico é obtida uma função que melhor descreve os dados do gráfico via regressão linear. Esta função obtida é comparada com a função \ref{eq:periodoGeral}. Ao se igualar o coeficiente linear das duas equações é possível determinar o valor da aceleração da gravidade. Então o valor da aceleração da gravidade é dado pela equação:
+
+\begin{align}\label{eq:exp2AceleracaoGravidade1}
+2\pi\sqrt{\frac{l}{g}} = cl
+\end{align}
+
+\begin{align}\label{eq:exp2AceleracaoGravidade2}
+(2\pi\sqrt{\frac{l}{g}})^2 = cl^2
+\end{align}
+
+\begin{align}\label{eq:exp2AceleracaoGravidade3}
+4\pi^2\frac{l}{g} = cl^2
+\end{align}
+
+\begin{align}\label{eq:exp2AceleracaoGravidade4}
+g = \frac{4\pi^2l}{cl^2}
+\end{align}
+
+Onde: 
+
+$l$: é comprimento do fio. Neste experimento o comprimento foi mantido fixo com o valor de 0,5 metros;
+
+$cl$: é o coeficiente linear da equação estimada obtida via regressão linear;
+
+Para calcular a progação do erro precisamos isolar *g* na equação \ref{eq:periodoGeral}. A equação abaixo apresenta a equação resultante.
+
+\begin{align}\label{eq:periodoGeral2}
+g = \frac{l}{T^2}(\frac{4\pi + \pi sen^2(\frac{\alpha}{2})}{2})^2
+\end{align}
+
+Podemos obter a propagação de erro derivando essa equação em relação ao período e ao ângulo de acordo a seguinte equação:
+
+\begin{align}\label{eq:exp2Erro1}
+\Delta g = \abs{\frac{\partial g(T, \alpha)}{\partial \alpha}}\Delta \alpha + \abs{\frac{\partial g(T, \alpha)}{\partial T}}\Delta T
+\end{align}
+
+Que resultou em:
+
+\begin{align}\label{eq:exp2Erro2}
+\Delta g = \frac{lT\pi^2sin(\alpha)(cos(\alpha - 9)) + l\pi^2(cos(\alpha)-9)^2}{8T^2}
+\end{align}
+
+PROCEDIMENTO EXPERIMENTAL
+===================
+
+## Materias utilizados
+
+* 1 esfera de D = 25,4mm
+* 1 cronomêtro digital
+* 1 régua milimetrada de 1000mm
+* 1 haste redonda
+* 1 porta placa
+* 1 fio de 1500mm
+* 1 haste redonda
+
+## Método do Experimento I
+
+O objetivo deste experimento é determinar a aceleração da gravidade através da medição dos períodos de um pêndulo simples para algumas variações de comprimento do fio do pêndulo.
+
+Primeiramente, utilizamos a régua milimetrada para ajustar a comprimento desejado do fio. Os comprimentos utilizados foram: 0,5, 0,6, 0,7, 0,8 e 0,9 metros. Em seguida, realizamos 3 medições do período do pêndulo para cada um destes comprimentos do fio. O fio foi inclinado em $10\degree$ em todo este experimento. Como o tempo medido pelo cronômetro é de meia oscilação, multiplicamos os valores lidos do cronômetro por 2 para obter o período.
+
+## Método do Experimento II
+
+O objetivo deste experimento é determinar a aceleração da gravidade através da medição dos períodos de oscilação variando o ângulo de inclinação do fio e mantendo o comprimento do fio fixo em 0,5 metros.
+
+Primeiramente, ajustamos o comprimento do fio para 0,5 metros com a régua milimetrada. Mantemos este comprimento durante todo o experimento. Em seguida, inclinamos o fio no seguintes ângulos: $10\degree$, $20\degree$, $30\degree$, $40\degree$ e $50\degree$. Para cada um destes ângulos, coletamos 3 amostras de período. Para isso, posicionamos o fio na inclinação desejada e soltomos a espera. Por fim, coletamos o valor do período apresentado no cronômetro.
+
+RESULTADOS
+====================
+
+## Experimento I
+
+A tabela seguinte apresenta os dados do experimento I.
+
+```{r echo=F, results="asis"}
+exp1Data <- data.frame(Length=c(0.500, 0.600, 0.700, 0.800, 0.900),
+                       T1=c(2*0.728, 2*0.753, 2*0.835, 2*0.923, 2*0.971), 
+                       T2=c(2*0.727, 2*0.751, 2*0.836, 2*0.926, 2*0.971), 
+                       T3=c(2*0.728, 2*0.755, 2*0.834, 2*0.925, 2*0.972))
+exp1Data$T_Media <- round(rowMeans(exp1Data[,2:4]), digits=3)
+exp1Data$T_DesvioPadrao <- round(rowSds(as.matrix(exp1Data[,2:4])), digits=3)
+exp1Data$Erro <- (8*pi^2*exp1Data$Length*exp1Data$T_DesvioPadrao)/exp1Data$T_Media
+exp1Erro <- round(mean(exp1Data$Erro),digits=3)
+
+varNamesExp1 <- c("Comprimento ± 0.001 (m)","$T_1$ ± 0.001 (s)", "$T_2$ ± 0.001(s)", "$T_3$ ± 0.001(s)", "$T_{md}$ ± 0.001(s)", "$T_{dp}$ ± 0.001 (s)")
+xt <- xtable(
+    exp1Data[,c("Length","T1","T2","T3","T_Media","T_DesvioPadrao")]
+    ,colnames=varNamesExp1
+    ,caption='Experimento 1'
+    ,align=c('lcccccc')
+    ,digits=c(3)
+    )
+names(xt) <- varNamesExp1
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.9'
+    )
+```
+
+Onde:
+
+$Comprimento$: é o comprimento do fio;
+
+$T_1$, $T_2$ e $T_3$: são as 3 amostras coletadas do período.
+
+$T_{md}$: é a média das 3 amostras;
+
+$T_{dp}$: é o desvio padrão;
+
+Com estes dados podemos gerar um gráfico relacionando o período médio com o comprimento do fio. O gráfico seguinte apresenta o resultado obtido:
+
+```{r echo=F, fig.height=3, fig.width=5, fig.align="center"}
+exp1Data$T_MediaLog <- log(exp1Data$T_Media)
+exp1Data$LengthLog <- log(exp1Data$Length)
+fitExp1 <- lm(T_MediaLog ~ I(LengthLog), data = exp1Data)
+dfPredExp1 <- data.frame("LengthLog"=seq(min(exp1Data$LengthLog),
+                                      max(exp1Data$LengthLog),
+                                      length.out = 100))
+dfPredExp1$T_MediaLog <- predict(fitExp1, newdata = dfPredExp1)
+ggplot(data=dfPredExp1, aes(x=LengthLog, y=T_MediaLog)) +
+       geom_line(colour = "blue") +
+       geom_point(data = exp1Data, aes(x=LengthLog, y=T_MediaLog)) +
+       xlab("Comprimento (m)") + ylab("$T_{md}$ ($s$)") +
+       theme_bw() + 
+       ggtitle("Periodo X Comprimento")
+
+exp1CoeficienteLinear <- coef(fitExp1)[1]
+exp1CoeficienteAngular <- coef(fitExp1)[2]
+gravidadeEstimada1 <- signif((4*(pi^2))/(exp(1)^(2*coef(fitExp1)[1])),digits=4)
+```
+
+Conforme verificado no gráfico, a regressão linear aproximou os dados em uma reta. Sua equação é apresentada abaixo:
+
+\begin{align}\label{eq:exp1AproximacaoReta}
+Periodo = `r exp1CoeficienteAngular` * Comprimento + `r exp1CoeficienteLinear`
+\end{align}
+
+Calculamos o valor da gravidade substituindo o valor do coeficiente linear desta equação na equação \ref{eq:exp1AceleracaoGravidade3} obtida na seção de teoria. O erro foi calculado utilizando a equação \ref{eq:exp1Erro3}. Então, o valor da gravidade obtido neste experimento é `r gravidadeEstimada1` $\pm$ `r exp1Erro` $m/s^2$.
+
+## Experimento II
+
+A tabela seguinte apresenta os dados do experimento II. 
+
+```{r echo=F, results="asis"}
+exp2Data <- data.frame(Angulo=c(10, 20, 30, 40, 50),
+                       T1=c(2*0.713, 2*0.717, 2*0.722, 2*0.735, 2*0.749),
+                       T2=c(2*0.712, 2*0.718, 2*0.723, 2*0.733, 2*0.749),
+                       T3=c(2*0.712, 2*0.718, 2*0.725, 2*0.733, 2*0.748))
+exp2Data$T_Media <- rowMeans(exp2Data[,2:4])
+exp2Data$T_DesvioPadrao <- rowSds(as.matrix(exp2Data[,2:4]))
+exp2Data$Seno <- sin(NISTdegTOradian(exp2Data$Angulo/2))
+exp2Data$Seno2 <- (sin(NISTdegTOradian(exp2Data$Angulo/2)))^2
+
+exp2Data$Erro <-abs((0.5*((4*pi+pi*exp2Data$Seno2)/2)^2*(-2/2*exp2Data$T_Media^3))*mean(exp2Data$T_DesvioPadrao))
+exp2Erro <- signif(mean(exp2Data$Erro),digits=3)
+
+
+varNamesExp2 <- c("Angulo ± 1 (graus)","Seno (rad)", "$Seno^2$ (rad)", "$T_1$ ± 0.001 (s)", "$T_2$ ± 0.001(s)", "$T_3$ ± 0.001(s)", "$T_{md}$ ± 0.001(s)", "$T_{dp}$ ± 0.001 (s)")
+xt <- xtable(
+    exp2Data[,c("Angulo","Seno","Seno2", "T1","T2","T3","T_Media","T_DesvioPadrao")]
+    ,colnames=varNamesExp2
+    ,caption='Experimento 2'
+    ,align=c('lcccccccc')
+    ,digits=c(3)
+    )
+names(xt) <- varNamesExp2
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.8'
+    )
+```
+
+Onde: 
+
+$Angulo$: é o ângulo de inclinação aplicado ao fio;
+
+$Seno$: é $\sin{\frac{\alpha}{2}}$ e $\alpha$ é o ângulo da coluna anterior;
+
+$Seno^2$: é $\sin^2{\frac{\alpha}{2}}$;
+
+$T_1$, $T_2$ e $T_3$: são as 3 amostras coletadas do período.
+
+$T_{md}$: é a média das 3 amostras;
+
+$T_{dp}$: é o desvio padrão;
+
+Com estes dados podemos gerar o primeiro gráfico relacionando $T_{md}$ X $Seno$. Abaixo, está o resultado obtido.
+
+```{r echo=F, fig.height=3, fig.width=5, fig.align="center"}
+fitExp2A <- lm(exp2Data$T_Media ~ I(exp2Data$Seno^2), data = exp2Data)
+dfPredExp2A <- data.frame(Seno=exp2Data$Seno)
+dfPredExp2A$T_Media <- predict(fitExp2A, newdata = dfPredExp2A)
+ggplot(data=dfPredExp2A, aes(x=Seno, y=T_Media)) +
+       geom_line(colour = "blue") +
+       geom_point(data = exp2Data, aes(x=Seno, y=T_Media)) +
+       xlab("Seno (rad)") + ylab("$T_{md}$ ($s$)") +
+       theme_bw() +
+       ggtitle("Relacao Periodo X Seno")
+```
+
+Observe que o gráfico apresenta uma parte do gráfico da função seno.
+
+Também fazendo uso da tabela acima, podemos criar o gráfico $T_{md}$ X $Seno^2$. O resultado obtido está logo abaixo.
+
+```{r echo=F, fig.height=3, fig.width=5, fig.align="center"}
+fitExp2B <- lm(exp2Data$T_Media ~ I(exp2Data$Seno2), data = exp2Data)
+dfPredExp2B <- data.frame(Seno2=exp2Data$Seno2)
+dfPredExp2B$T_Media <- predict(fitExp2B, newdata = dfPredExp2B)
+ggplot(data=dfPredExp2B, aes(x=Seno2, y=T_Media)) +
+       geom_line(colour = "blue") +
+       geom_point(data = exp2Data, aes(x=Seno2, y=T_Media)) +
+       xlab("$Sen^2$ ($rad$)") + ylab("$T_{md}$ ($s$)") +
+       theme_bw() +
+       ggtitle("Periodo X $Sen^2$")
+
+exp2CoeficienteLinear <- coef(fitExp2B)[1]
+exp2CoeficienteAngular <- coef(fitExp2B)[2]
+gravidadeEstimada2 <- signif((4*(pi^2)*0.5)/(coef(fitExp2B)[1]^2), digits=4)
+```
+
+Observe que a regressão linear aproximou este dados para uma reta. A equação desta reta está logo abaixo:
+
+\begin{align}\label{eq:exp2AproximacaoReta}
+Periodo = `r exp2CoeficienteAngular` * sen^2 + `r exp2CoeficienteLinear`
+\end{align}
+
+Obtemos o valor experimental da aceleração da gravidade substituindo o valor do coeficiente linear obtido acima na equação \ref{eq:periodoGeral2}. O erro foi obtido utilizando a equação \ref{eq:exp2Erro2}. Portanto, o valor estimado da aceleração da gravidade é `r gravidadeEstimada2` $\pm$ `r exp2Erro` $m/s^2$.
+
+
+CONCLUSÃO
+===
+
+Após a realização dos experimentos e análise dos resultados obtidos, é possível responder algumas perguntas abaixo:
+
+1 Faça um comentário sobre a influência da variação angular no pêndulo simples em cada experiência.
+
+No primeiro experimento, o ângulo de inclinação do pêndulo foi mantido constante e próximo de $10\degree$. Neste caso, o seno do ângulo é próximo do valor do ângulo, portanto, a equação \ref{eq:periodoGeral} pode ser simplificada para a equação \ref{eq:periodoPenduloSimples}. O que significa um reta quando plotar o perido em função do comprimento.
+
+Já no segundo experimento, o ângulo varia mais de $10\degree$ e, portanto, é preciso utilizar a equação geral do período \ref{eq:periodoGeral}. Como esta equação tem o termo seno ao quadrado, este termo resultará em um número bem próximo de zero tornando o outro termo de fato dominante na equação. Este outro termo é justamento o termo utilizado no experimento de pêndulo simples. Então, pode-se dizer que um gráfico relacionado o período com o sen ao quadrado será muito próximo de uma reta.
+
+2 Compare o valor da aceleração da gravidade, obtidos nas duas experiências e verifique qual obteve melhor precisão. Comente as possíveis fontes de erros.
+
+No experimento I concluímos que a função obtida experimentalmente coincide com a esperada. Três argumentos que suportam esta conclusão  é que o regressor linear identificou uma reta a partir dos dados experimentais o que esperávamos na teoria (ver \ref{eq:logPeriodoPenduloSimples4}). O segundo argumento é que o coeficiente angular da reta obtida via regressão linear ficou com valor de aproximadamente 0,5 o que já era esperado pela teoria conforme demonstrado na equação \ref{eq:logPeriodoPenduloSimples4}. O terceiro argumento é que obtemos um valor da aceleração da gravidade muito próximo ao valor de 9,8 $m/s^2$ determinado pelo escopo do trabalho.
+
+No experimento II, no gráfico T X sen ($\frac{\alpha}{2}$) obtemos uma curva muito parecida com uma semi-parábola ou um parte da função seno. Este resultado coincide com a teria. No gráfico T X sen^2 ($\frac{\alpha}{2}$) obtemos uma reta que também coincide com o resultado esperado na teroria visto que o efeito de multiplicar a função sen por ela mesma causou uma apliação da curva obtida anteriormente. Esta ampliação tornou a curva mais linear. Ao comparar os valores da aceleração da gravidade obtido experimentalmente com 9,8, observamos que o valor experimental muito próximo de 9,8. Ele ficou dentro da margem de erro.
+
+Comparando os dois experimentos, observa-se que o segundo experimento obteve um valor mais preciso que o primeiro experimento. 
+
+3 Quais das duas experiências descrevem um movimento harmônico simples? Justifique.
+
+A primeira experiência descreve um movimento harmônico simples por que a frequência é mantida constante durante o experimento.
+
+4 Explique em quais condições um pêndulo pode ser usado como um relôgio?
+
+De acordo com @wiki:1, para um relógio de pêndulo ser um medidor de tempo preciso, a amplitude do movimento deve ser mantida constante apesar de as perdas por atrito afetarem todo o sistema mecânico. Variações na amplitude, tão pequenas quanto 4° ou 5°, fazem um relógio adiantar cerca de 15 segundos por dia, o que não é tolerável mesmo num relógio caseiro. Para manter constante a amplitude é necessário compensar com um peso ou mola, fornecendo energia automaticamente, compensando as perdas devidas ao atrito.
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+===

@@ -1,0 +1,323 @@
+---
+title: |
+ | UNIVERSIDADE FEDERAL DO AMAZONAS
+ | INSTITUTO DE CIÊNCIAS EXATAS
+ | BACHARELADO EM MATEMÁTICA
+subtitle: | 
+    | LABORATÓRIO DE FÍSICA II
+    | RELATÓRIO VI - TROCA DE CALOR
+author: | 
+    | Gabriel Bezerra de M. Armelin - 21550325
+    | Jonas Miranda Cascais Júnior - 21553844
+framework: io2012
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    pandoc_args: [
+      "--number-sections",
+      "--number-offset=1"
+    ]
+    # number_sections: false
+    template: template.latex
+    latex_engine: xelatex
+documentclass: report
+fontsize: 11pt
+geometry: top=3cm, left=2.5cm, right=2.5cm, bottom=2.5cm
+papersize: a4paper
+professor: Prof. Daniela Menegon Trichês
+city: Manaus
+year: 2017
+bibliography: bibliography.bib
+mode: selfcontained
+#header-includes: 
+#    - \usepackage{verbatim}
+#    - \usepackage[utf8]{inputenc}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{indentfirst}  
+    # - \usepackage{mathtools}       
+    # - \usepackage[T1]{fontenc}     
+    # - \usepackage{multicol}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{bbm}
+    # - \usepackage{commath}
+    # - \usepackage{graphicx, color}
+    # - \setlength{\parskip}{0.3cm}
+    # - \usepackage{tikz}
+nocite: | 
+  @ref1, @ref2, @ref3
+---
+
+
+```{r setup, include=FALSE}
+suppressWarnings(library("knitr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("grid"))
+suppressWarnings(library("gridExtra"))
+suppressWarnings(library("tikzDevice"))
+suppressWarnings(library("xtable"))
+suppressWarnings(library("printr"))
+suppressWarnings(library("matrixStats"))
+suppressWarnings(library("scales"))
+suppressWarnings(library("NISTunits"))
+
+opts_chunk$set(dev = 'pdf')
+set.seed(12432) 
+
+decimalDigits <- 2
+options(digits = decimalDigits) 
+#options(tikzDefaultEngine="xetex")
+#options(encoding = "UTF-8")
+
+opts_chunk$set(comment=NA, collapse=T, cache=F, autodep=T,
+               dev="tikz", fig.width=4.5, fig.height=2.75,
+               size ='footnotesize',
+               dev.args=list(pointsize=9),
+               message=F, warning=F, autodep=T)
+```
+
+
+RESUMO
+====================
+
+Este relatório apresenta um método para determinar o calor específico de um sólido. Para isto foram realizados dois experimentos, o primeiro determinou a capacidade térmica do calorímetro e o segundo o calor específico do latão utilizando a valor da capacidade térmica do primeiro experimento. Por fim, apresentamos melhorias que poderiam ser realizadas para tornar os dados mais precisos.
+
+INTRODUÇÃO
+====================
+
+O objetivo deste trabalho é verificar na prática o calor específico do latão. Para isto, este trabalho foi divido em seções. A seção denominada Fundamentos Teóricos, apresenta a teoria necessária para entender os cálculos neste trabalho, a seção procedimentos experimentas explica as atividades realizadas para se obter os dados desejados, a seção resultados apresenta tais dados e o valor do calor específico do latão, por fim, a seção conclusão discute sobre como o experimento poderia ser melhorado para obter dados mais precisos.
+
+FUNDAMENTOS TEÓRICOS
+====================
+
+## Teoria
+
+De acordo @ref2, o calor de um sistema é calculado pela equação:
+
+\begin{align}\label{eq:equacaoCalor}
+Q = mc\Delta{t}
+\end{align}
+
+Dois sistemas separados quando colocados em contanto apresentarão a mesma temperatura depois de um tempo. Se estes sistemas estiverem em condições ideias de isolamento térmico com o ambiente, o calor $Q_1$ fornecido pelo sistema mais quente será igual ao calor $Q_2$ recebido pelo sistema menos quente. Isto é:
+
+\begin{align}\label{eq:calorSistema}
+\sum_{n=1}^{i} Q_n = 0
+\end{align}
+
+No caso do experimento 1, tem-se:
+
+\begin{align}\label{eq:calorSistemaExp1}
+Q_{calorimetro} + Q_{aguaFria} + Q_{aguaAquecida} = 0
+\end{align}
+
+
+Os calorímetros são instrumentos utilizados para determinar o calor específico de substâncias, não conseguem reproduzir as condições ideais de isolamento térmico. Portanto, há necessidade de se calcular o seu equivalente em água, isto é, a quantidade de água que tem a mesma capacidade calorífica do calorímetro de acordo com a fórmula seguinte:
+
+\begin{align}\label{eq:calorimetro}
+C = mc 
+\end{align}
+
+Portanto, para o experimento 1, podemos determinar a capacidade térmica do calorímetro utilizando as equações \ref{eq:calorSistemaExp1} e \ref{eq:calorimetro}. A equação está logo a seguir:
+
+\begin{align}\label{eq:calorimetroExp1}
+C = -mc \times \frac{\Delta t_{AF} + \Delta t_{AQ}}{\Delta t_{C}}
+\end{align}
+
+Para o experimento 2, podemos determinar o calor específico do latão utilizando a seguinte equação:
+
+\begin{align}\label{eq:calorEspecificoLatao}
+c_{latao} = - \frac{ C \times \Delta t_{agua}}{m_{latao} \times \Delta t_{latao}}
+\end{align}
+
+
+## Propagação de erro
+
+Para calcular a propagação de erro para o experimento 1, derivamos a equação \ref{eq:calorimetroExp1}. A equação resultante está abaixo:
+
+\begin{align}\label{eq:propagacaoErro}
+ C' = \frac{mc(\Delta t_{C} \times \delta \Delta t_{AF} + \Delta t_{C} \times \delta \Delta t_{AQ} + \Delta t_{AF} \delta \Delta t_{C} + \Delta_{AQ} \delta \Delta t_{C} )}{\Delta t_{C} ^2}
+\end{align}
+
+Sendo:
+
+$\Delta t_{C}$: variação de temperatura do calorímetro.
+
+$\Delta_{AQ}$: variação de temperatura da água aquecida.
+
+$\Delta t_{AF}$: variação de temperatura da água fria.
+
+$\delta \Delta t_{C}$: é o valor da incerteza de $\Delta T_{C}$.
+
+$\delta \Delta t_{AQ}$: é o valor da incerteza de $\Delta T_{AQ}$.
+
+$\delta \Delta t_{AF}$: é o valor da incerteza de $\Delta T_{AF}$.
+
+Para o experimento 2, derivamos a equação \ref{eq:calorEspecificoLatao}. A equação resultante está abaixo:
+
+\begin{align}\label{eq:propagacaoErro}
+ c'_{latao} = \frac{C \times \Delta t_{latao} \times \delta t_{agua} + C \times \Delta t_{agua} \delta \Delta t_{latao}}{m_{latao} \times \Delta t_{latao} ^2}
+\end{align}
+
+
+PROCEDIMENTO EXPERIMENTAL
+====================
+
+## Materias utilizados
+
+* 1 calorímetro de 500ml
+
+* 1 termômetro
+
+* 1 béquer
+
+* 1 aquecedor de imersão
+
+* 1 haste de madeira
+
+* 1 balança
+
+* 1 cilindro de latão
+
+* barras: 1 de ferro e 1 de alumínio
+
+## Método do Experimento 1
+
+1. Colocar 200g de água no calorímetro e anote a temperatura
+
+2. Meça 200g de água fria em um béquer.
+
+3. Aqueça a água do calorímetro até uma temperatura de 70 e 80 graus Celsius. Anote essa medida.
+
+4. Coloque a água fria no calorímetro e sempre agitando a mistura com uma haste de madeira, anote a temperatura de equilíbrio.
+
+## Método do Experimento 2
+
+1. Derrame a água de seu calorímetro e deixe-o esfriar por uns 10 minutos
+
+2. Enquanto espera, determine a massa do cilindro de latão, mergulhei-o num béquer com água e ligue o aquecedor até que a água entre em ebulição.
+
+3. Coloque 200g de água fria no calorímetro e anote a sua temperatura
+
+4. Retire o cilindro de latão da água fervente e coloque no calorímetro. Sempre agitando, espere e anote a temperatura de equilíbrio térmico.
+
+RESULTADOS
+====================
+
+## Experimeto 1
+
+
+```{r echo=F, results="asis"}
+T_calorimetro <- c(24.5)
+T_aguaFria <- c(25.5)
+T_aguaAquecida <- c(75.00)
+T_equilibrio <- c(47.3)
+
+exp1Data <- data.frame(T_calorimetro,
+                       T_aguaFria,
+                       T_aguaAquecida,
+                       T_equilibrio)
+
+varNamesExp <- c("$T_{calorimetro}$ ± 0.01 ($^{\\circ}$C)", "$T_{aguaFria}$ ± 0.01 ($^{\\circ}$C)", "$T_{aguaAquecida}$ ± 0.01 ($^{\\circ}$C)", "$T_{equilibrio}$ ± 0.01 ($^{\\circ}$C)")
+
+calorEspecificoCalorimetro <- -200*(exp1Data$T_equilibrio[1] - exp1Data$T_aguaFria[1] + exp1Data$T_equilibrio - exp1Data$T_aguaAquecida) / (exp1Data$T_equilibrio - exp1Data$T_calorimetro)
+
+exp1Erro <- (200*((exp1Data$T_equilibrio - exp1Data$T_calorimetro)*0.01 + (exp1Data$T_equilibrio - exp1Data$T_calorimetro)*0.01 +  (exp1Data$T_equilibrio - exp1Data$T_aguaFria)*0.01 + (exp1Data$T_equilibrio - exp1Data$T_aguaAquecida)*0.01)) / ((exp1Data$T_equilibrio - exp1Data$T_calorimetro))^2
+
+xt <- xtable(
+    exp1Data[,c("T_calorimetro", "T_aguaFria", "T_aguaAquecida", "T_equilibrio")]
+    ,colnames=varNamesExp
+    ,caption='Dados experimentais'
+    ,align=c('lcccc')
+    ,digits=c(2)
+    )
+names(xt) <- varNamesExp
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.9'
+    )
+
+```
+
+Substituindo os dados acima na equação \ref{eq:calorimetroExp1}, tem-se:
+
+\begin{align}\label{eq:calorSistemaExp2}
+C = -\frac{200\times 1 \times(`r exp1Data$T_equilibrio[1]` - `r exp1Data$T_aguaFria[1]` + `r exp1Data$T_equilibrio` - `r exp1Data$T_aguaAquecida`)}{`r exp1Data$T_equilibrio` - `r exp1Data$T_calorimetro`}
+\end{align}
+
+
+Resultando no calor específico do calorímetro de `r calorEspecificoCalorimetro` ± `r exp1Erro` cal. O valor do erro foi calculado utilizando a equação \ref{eq:propagacaoErro}.
+
+## Experimeto 2
+
+A próxima tabela apresenta os dados obtidos para o experimento 2:
+
+```{r echo=F, results="asis"}
+T_latao_i <- c(100)
+T_latao_f <- c(27.5)
+T_agua_i <- c(24.5)
+T_agua_f <- c(27.5)
+T_latao_dif <- T_latao_f - T_latao_i
+T_agua_dif <- T_agua_f - T_agua_i
+exp2Data <- data.frame(T_latao_i,
+                       T_latao_f,
+                       T_latao_dif,
+                       T_agua_i,
+                       T_agua_f,
+                       T_agua_dif)
+
+c_latao <- -((calorEspecificoCalorimetro*exp2Data$T_agua_dif)/(93.5*exp2Data$T_latao_dif))
+erroExp2 <- abs((calorEspecificoCalorimetro*exp2Data$T_latao_dif*0.01 + calorEspecificoCalorimetro*exp2Data$T_agua_dif*0.01) / (93.5*exp2Data$T_latao_dif^2))
+
+varNamesExp <- c("$T_{latao} Inic$ ± 0.01 ($^{\\circ}$C)", "$T_{latao} final$ ± 0.01 ($^{\\circ}$C)", "$\\Delta t_{latao}$ ± 0.01 ($^{\\circ}$C)", "$T_{agua} Inic$ ± 0.01 ($^{\\circ}$C)", "$T_{agua} Final$ ± 0.01 ($^{\\circ}$C)", "$\\Delta t_{agua}$ ± 0.01 ($^{\\circ}$C)")
+
+xt <- xtable(
+    exp2Data[,c("T_latao_i", "T_latao_f", "T_latao_dif", "T_agua_i", "T_agua_f", "T_agua_dif")]
+    ,colnames=varNamesExp
+    ,caption='Dados experimentais'
+    ,align=c('lcccccc')
+    ,digits=c(2)
+    )
+names(xt) <- varNamesExp
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='0.7'
+    )
+
+```
+
+Substituindo estes valores na equação \ref{eq:calorEspecificoLatao}, e utilizando o valor de 93.5g para a massa do latão, obtém-se o valor de $`r c_latao`$ ± $`r erroExp2`$ para a capacidade térmica do latão.
+
+CONCLUSÃO
+====================
+
+As providências que devem ser tomadas para que o resultado obtido seja mais preciso são as seguintes:
+
+* Maior rapidez para colocar a água quente para que não haja muita perda de calor para o ambiente.
+
+* Um termômetro preciso mais preciso
+
+* Um calorímetro mais próximo do ideal
+
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+====================

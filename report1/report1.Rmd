@@ -1,0 +1,444 @@
+---
+title: |
+ | UNIVERSIDADE FEDERAL DO AMAZONAS
+ | INSTITUTO DE CIÊNCIAS EXATAS
+ | BACHARELADO EM MATEMÁTICA
+subtitle: | 
+    | LABORATÓRIO DE FÍSICA II
+    | RELATÓRIO I - OSCILAÇÕES LIVRES
+author: | 
+    | Gabriel Bezerra de M. Armelin - 21550325
+    | Jonas Miranda Cascais Júnior - 21553844
+framework: io2012
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    pandoc_args: [
+      "--number-sections",
+      "--number-offset=1"
+    ]
+    # number_sections: false
+    template: template.latex
+    latex_engine: xelatex
+documentclass: report
+fontsize: 11pt
+geometry: top=3cm, left=2.5cm, right=2.5cm, bottom=2.5cm
+papersize: a4paper
+professor: Dra. Daniela Menegon Trichês
+city: Manaus
+year: 2016
+bibliography: bibliography.bib
+mode: selfcontained
+#header-includes: 
+#    - \usepackage{verbatim}
+#    - \usepackage[utf8]{inputenc}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{indentfirst}  
+    # - \usepackage{mathtools}       
+    # - \usepackage[T1]{fontenc}     
+    # - \usepackage{multicol}
+    # - \usepackage[brazil]{babel}
+    # - \usepackage{bbm}
+    # - \usepackage{commath}
+    # - \usepackage{graphicx, color}
+    # - \setlength{\parskip}{0.3cm}
+    # - \usepackage{tikz}
+nocite: | 
+  @ref1, @ref2, @ref3
+---
+
+
+```{r setup, include=FALSE}
+suppressWarnings(library("knitr"))
+suppressWarnings(library("ggplot2"))
+suppressWarnings(library("grid"))
+suppressWarnings(library("gridExtra"))
+suppressWarnings(library("tikzDevice"))
+suppressWarnings(library("xtable"))
+suppressWarnings(library("printr"))
+suppressWarnings(library("matrixStats"))
+suppressWarnings(library("scales"))
+
+opts_chunk$set(dev = 'pdf')
+set.seed(12432) 
+
+decimalDigits <- 4
+options(digits = decimalDigits) 
+#options(tikzDefaultEngine="xetex")
+#options(encoding = "UTF-8")
+
+opts_chunk$set(comment=NA, collapse=T, cache=F, autodep=T,
+               dev="tikz", fig.width=4.5, fig.height=2.75,
+               size ='footnotesize',
+               dev.args=list(pointsize=9),
+               message=F, warning=F, autodep=T)
+```
+
+
+RESUMO
+===================
+
+Este relatório descreve e analisa dois experimentos para obter a constante elástica de uma mola. O primeiro experimento consiste em determinar a constante elástica de uma mola estimando-a a partir da força peso e a respectiva distensão sofrida pela mola ao ser submetida a diversas massas. Foi gerado um gráfico mostrando a relação destas duas variáveis e através de regressão linear foi obtida a reta necessária para estimar a constante elástica. O segundo experimento consiste em determinar a constante elástica da mola utilizando os resultados do movimento harmônico simples. Para isso, os alunos cronometram o período que o objeto levou para completar um ciclo após a mola ter sido esticada e, em seguida, liberada. De posse do período, foi possível criar um gráfico relacionando o período com o respectiva massa e estimar a constante de elasticidade da mola. No final, a constante elástica obtida pelos dois métodos foram comparadas e descobrimos uma diferença de 5 unidades entre eles.
+
+
+INTRODUÇÃO
+===================
+
+Este relatório descreve e analisa dois experimentos para obter a constante elástica de uma mola. De posse da constante elástica, um engenheiro ou cientista pode calcular a força e energia exercida pela mola. Com a força e energia, pode-se entender e prever o comportamento de sistemas constituídos por mola-massa.
+
+Para a obtenção das constantes elásticas, os alunos realizaram os experimentos em laboratório, pesquisaram os fundamentos teóricos, e realizaram a análise de dados obtidos através dos experimentos. As atividades realizadas em cada uma destas etapas estão detalhadas nos textos a seguir.
+
+FUNDAMENTOS TEÓRICOS
+===================
+
+De acordo com [@ref1], a força elástica é uma força restauradora, ou seja, ela tende a restaurar o estado relaxado de, por exemplo, uma mola. Neste caso, uma extremidade da mola é fixa e a outra um objeto é preso a outra extremidade da mola. Se alongamos a mola puxando puxando o bloco para a direita, a mola exerce uma força no bloco para a esquerda. Se comprimimos a mola empurrando o bloco para a esquerda, a mola exerce uma força no bloco para a direita. Esta força é sempre contrária ao deslocamento. Ela é definida como:
+
+\begin{align}\label{eq:leiHooke}
+F = -k * x
+\end{align}
+
+Em que: 
+
+F: é a força elástica;
+
+k: é a constante elástica da mola;
+
+x: é o deslocamento
+
+De acordo com [@ref2], em um movimento harmônico simples a aceleração é obtida de acordo com a seguinte fórmula:
+
+\begin{align}\label{eq:aceleracaoMHS}
+a(t) = -\omega^2x(t)
+\end{align}
+Em que $\omega$ é frequência angular e é obtido de acordo com: 
+
+\begin{align}\label{eq:omega}
+\omega = \frac{2*\pi}{T}&& \text{, T é o período de um ciclo}
+\end{align}
+
+Aplicando a aceleração obtida em \ref{eq:aceleracaoMHS} na segunda lei de Newton, tem-se:
+
+\begin{align}\label{eq:ForcaAceleracaoMHS}
+F = ma = -(m\omega^2)x
+\end{align}
+
+Comparando a equação \ref{eq:ForcaAceleracaoMHS} com a equação da lei de Hooke em \ref{eq:leiHooke}, observa-se que um movimento harmônico simples é o movimento executado por uma partícula sujeita a uma força proporcional ao deslocamento da partícula e de sinal oposto. Equivalente a lei de Hooke. Portanto, pode-se obter a constante elástica pela seguinte equação:
+
+\begin{align}\label{eq:constanteElastica}
+k = m\omega^2
+\end{align}
+
+Substituindo $\omega$ de \ref{eq:omega} em \ref{eq:constanteElastica} e isolando $\omega$, tem-se:
+
+\begin{align}\label{eq:omegaConstanteElastica}
+\omega = \sqrt{\frac{m}{k}}
+\end{align}
+
+Substituindo $\omega$ pelo período de \ref{eq:omega}, $T$, tem-se:
+
+\begin{align}\label{eq:periodoConstanteElastica}
+T = 2\pi\sqrt{\frac{m}{k}}
+\end{align}
+
+Isolando *k*, tem-se:
+
+\begin{align}\label{eq:periodoConstanteElastica2}
+k = \frac{4\pi^2m}{T^2}
+\end{align}
+
+
+PROCEDIMENTO EXPERIMENTAL
+===================
+
+Esta seção apresenta os materias e métodos utilizados nos experimentos.
+
+## Materias utilizados
+
+* 1 mola
+* 1 porta-peso 10g
+* 5 massas de aproximadamente 50g*.
+* 1 régua milimetrada
+* 1 cronômetro.
+
+ * Os valores exatados estão apresentados na tabela de dados dos experimentos. 
+
+## Procedimento do Experimento I
+
+Este relatório apresentará dois experimentos para obter a constante elástica de uma mola utilizando a força gravitacional. Cada experimento utilizará um metódo diferente.
+
+O primeiro experimento consiste um obter a constante elástica da mola via a aplicação de algumas forças peso e suas respectivas distensões sofridas pela mola. Para isso, uma extremidade da mola foi presa em um suporte vertical e a altura da outra extremidade foi medida com uma reguá milimetrada. Algumas partículas foram adicionadas a extremidade livre da mola e a distensão sofrida pela mola foi medida no ponto de equilíbrio foi medida. O modelo matemático para obter a constante elástica por este método é  apresentado abaixo.
+
+De acordo com a segunda lei de Newton, tem-se:
+
+\begin{align}\label{eq:segundaLeiNewton}
+F_r = ma
+\end{align}
+
+No momento de equilíbrio da mola distendida devido a aplicação da partícula, tem-se:
+
+\begin{align}\label{eq:equilibrio1}
+P - F_e(x) = 0&& \text{a=0, pois a partícula está em equilíbrio}
+\end{align}
+
+Então,
+
+\begin{align}\label{eq:equilibrio2}
+P = F_e(x)&& \text{P: é a força peso e $F_e$ é a forca elástica.}
+\end{align}
+
+Substituindo por suas respectivas equações, tem-se:
+
+\begin{align}\label{eq:equilibrio3}
+mg = -kx
+\end{align}
+
+Conclui-se que:
+
+\begin{align}\label{eq:equilibrio4}
+k = - \frac{mg}{x}
+\end{align}
+
+Portanto, a constante k pode ser obtida experimentalmente fazendo um gráfico da força peso em relação a distensão da mola, determinando a melhor reta que combina com os pontos no gráfico e calculando seu coeficiente angular. A equação \ref{eq:equilibrio4} representa o coeficiente angular desta reta. Portanto, neste método o valor da constante elástica é dado pelo coeficiente angular da reta obtida por regrassão linear no gráfico Peso X Distensão.
+
+Uma observação importante: como a nossa referência para o deslocamento *x* é para cima e o objeto se move para baixo, tem-se que *x* sempre será um número negativo. Portanto, o valor de *k* sempre será positivo.
+
+## Propagação de erro do Experimento I
+
+Para a estimativa de erro da constante elástica, calculamos a derivada da equação \ref{eq:equilibrio4} conforme demostrado a seguir:
+
+\begin{align}\label{eq:erroExp1-1}
+\delta{k} = \abs{\pdv{k}{m}}\delta{m} + \abs{\pdv{k}{x}}\delta{x}
+\end{align}
+
+\begin{align}\label{eq:erroExp1-2}
+\delta{k} = \frac{xg\delta{m} + mg\delta{x}}{x^2}
+\end{align}
+
+
+## Método do Experimento II
+
+O segundo experimento consiste em determinar a constante elástica da mola utilizando um modelo baseado no movimento harmônico simples. Para isso, foi preso à mola uma objeto, registrado o alongamento da mola com esse objeto na posição de equilíbrio, mantida alongada a mola em uma amplitude de 30 milimetros, liberada o objeto e registrada o tempo de 10 períodos do objeto.
+
+A equação obtida em \ref{eq:periodoConstanteElastica} é o modelo utilizado neste experimento para obter a constante elástica. No entento, precisa-se linearizar esta equação. O processo utilizado de linearização está apresentado abaixo:
+
+\begin{align}\label{eq:periodoConstanteElasticaLog1}
+log(T) = log(2\pi\sqrt{\frac{m}{k}})
+\end{align}
+
+Após alguns manipulações da função logarítmica, obtem-se:
+
+\begin{align}\label{eq:periodoConstanteElasticaLog2}
+log(T) = log(\frac{2\pi}{\sqrt{k}}) + \frac{1}{2}log(m)
+\end{align}
+
+Como a equação acima é uma equação linear, pode-se obter a constante elástica comparando valor da estimativa da interseção da reta, obtida via regressão linear, com o eixo dos períodos de acordo com a equação abaixo:
+
+\begin{align}\label{eq:periodoConstanteElasticaLog3}
+b = log(\frac{2\pi}{\sqrt{k}}) && \text{*b* é o valor da interseção da reta com o eixo dos períodos}
+\end{align}
+
+Portanto, o valor de k no experimento é:
+
+\begin{align}\label{eq:periodoConstanteElasticaLog4}
+k = \frac{4\pi^2}{10^{2b}}
+\end{align}
+
+Em que *b* é o valor do coeficiente linear da função obtida via regressão linear com os dados do experimento.
+
+## Propagação de erro do Experimento II
+
+Para a estimativa de erro da constante elástica, calculamos a derivada da equação \ref{eq:periodoConstanteElastica2} conforme demostrado a seguir:
+
+\begin{align}\label{eq:erroExp2-1}
+\delta{k} = \abs{\pdv{k}{m}}\delta{m} + \abs{\pdv{k}{T}}\delta{T}
+\end{align}
+
+\begin{align}\label{eq:erroExp2-2}
+\delta{k} = \frac{4\pi^2T\delta{m} + 8\pi^2m\delta{T}}{T^3}
+\end{align}
+
+RESULTADOS
+====================
+
+## Experimento I - Determinação da constante elástica pelo método estático
+
+Esta seção apresenta os dados e cálculos em cada atividade descrita na seção *Parte Experimental*.
+
+```{r echo=F, results="asis",cache=F}
+dfExp1 <- data.frame(
+  "Massa" = c(0, 10/1000, 60.1/1000, 110.2/1000, 160.7/1000, 210.4/1000, 260.2/1000),
+  "Dist" = c(0.000, 0.005, 0.031, 0.053, 0.084, 0.110, 0.135))
+dfExp1$Massa <- round(dfExp1$Massa, digits=3)
+dfExp1$Dist <- round(dfExp1$Dist, digits=3)
+dfExp1$ForcaPeso <- round(dfExp1$Massa*9.8, digits=3)
+dfExp1DigSigMassa <- 0.001
+dfExp1DigSigDist <- 0.001
+aceleracaoGravidade <- 9.8
+exp1Erro <- round((mean(dfExp1$Dist)*aceleracaoGravidade*dfExp1DigSigMassa+mean(dfExp1$Massa)*aceleracaoGravidade*dfExp1DigSigDist)/mean(dfExp1$Dist)^2, digits=3)
+
+varNamesExp1 <- c("Massa ± 0.001 (kg)","Distensão ± 0.001 (m)", "Peso (N) ± 0.001")
+xt <- xtable(
+    dfExp1
+    ,colnames=varNamesExp1
+    ,caption='Experimento 1.'
+    ,align=c('lccc')
+    ,digits=c(3)
+    )
+names(xt) <- varNamesExp1
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='1.0'
+    )
+```
+
+Na tabela acima, a coluna *Força Gravitacional* foi calculada utilizando a seguinte fórmula:
+
+\begin{align}\label{eq:forcaGravitacional}
+P_i = m_i*g
+\end{align}
+
+Em que *i* representa a i-ésima amostra coleta e $g = 9,8 m/s^2$.
+
+O gráfico seguinte apresenta os dados da força peso em relação a distensão obtida para cada amostra.
+
+```{r echo=F, fig.height=2.5, fig.width=5, fig.align="center", cache=F}
+fitExp1 <- lm(ForcaPeso ~ Dist, data = dfExp1)
+coeficienteDist <- sprintf("%.3f",coef(fitExp1)[2])
+dfPredExp1 <- data.frame("Dist"=seq(min(dfExp1$Dist),
+                                  max(dfExp1$Dist),
+                                  length.out = 100))
+dfPredExp1$ForcaPeso <- predict(fitExp1, newdata = dfPredExp1)
+ggplot(data=dfPredExp1, aes(x=Dist, y=ForcaPeso)) +
+       #scale_y_log10() +
+       #scale_x_log10() +
+       geom_line(colour = "blue") +
+       geom_point(data = dfExp1, aes(x=Dist, y=ForcaPeso)) +
+       xlab("Distensao (m)") + ylab("Forca (N)") +
+       theme_bw() + 
+       ggtitle("Relacao Forca X Distensao")
+       #theme(axis.text=element_text(size=9), axis.title=element_text(size=10))
+```
+
+
+A reta azul foi gerada utilizando o método de regressão linear que obteve a melhor reta para os dados do experimento. A equação desta reta é:
+
+\begin{align}\label{eq:estimativaDeslocamento}
+F = `r coeficienteDist` * Distensao + `r coef(fitExp1)[1]` 
+\end{align}
+
+O coeficiente desta equação corresponde a constante *k*. Portanto, o valor de k = `r coeficienteDist` ± `r exp1Erro` N/m. O erro foi calculado utilizando a fórmula \ref{eq:erroExp1-2}.
+
+
+## Experimento II - Determinação da constante elástica pelo método dinâmico
+
+```{r echo=F, results="asis",cache=T}
+dfExp2 <- data.frame(
+  "Massa"=dfExp1$Massa[3:7],
+  "Periodo1"=c(4.19/10, 5.26/10, 5.86/10, 6.87/10, 7.65/10),
+  "Periodo2"=c(3.75/10, 4.98/10, 5.66/10, 6.56/10, 7.59/10),
+  "Periodo3"=c(4.19/10, 4.97/10, 5.75/10, 6.83/10, 7.62/10))
+dfExp2$PeriodoMedia <- round(rowMeans(as.matrix(dfExp2[,2:4])), digits=3)
+dfExp2$PeriodoQuadrado <- dfExp2$PeriodoMedia^2
+dfExp2$PeriodoLog <- log10(dfExp2$PeriodoMedia)
+dfExp2$MassaLog <- log10(dfExp2$Massa)
+dfExp2$PeriodoDesvioPadrao <- round(rowSds(as.matrix(dfExp2[,2:4])), digits=3)
+exp2Erro <- round((4*pi^2*mean(dfExp2$PeriodoMedia)*0.001+8*pi^2*mean(dfExp2$Massa)*0.0001)/mean(dfExp2$PeriodoMedia)^3, digits=3)
+varNamesExp2 <- c("Massa ± 0.0001 (kg)","$T_1$ ± 0.001 (s)", "$T_2$ ± 0.001(s)", "$T_3$ ± 0.001(s)", "$T_{md}$ ± 0.001(s)", "$T_{dp}$ ± 0.001 (s)")
+xt <- xtable(
+    dfExp2[,c("Massa","Periodo1","Periodo2","Periodo3","PeriodoMedia","PeriodoDesvioPadrao")]
+    ,colnames=varNamesExp1
+    ,caption='Experimento 2'
+    ,align=c('lcccccc')
+    ,digits=c(c(1,4,3,3,3,3,3))
+    )
+names(xt) <- varNamesExp2
+print(
+     xt
+    ,type='latex'
+    ,caption.placement='top'
+    ,include.rownames=T
+    ,only.contents=F
+    ,include.colnames=T
+    #,html.table.attributes="class='plainTable' id='table1'"
+    #,sanitize.rownames.function=function(x)
+    ,sanitize.text.function=function(x){x}
+    ,comment=F
+    ,timestamp=F
+    ,scalebox='.9'
+    )
+
+```
+Em que:
+
+$T_1$, $T_2$ e $T_3$: são as três amostras de período obtidas para uma determinada massa;
+
+$T_{md}$: é a média dos períodos obtidos;
+
+$T_{dp}$: é o desvio padrão da média dos períodos;
+
+O gráfico seguinte apresenta, em escala logarítmica, a relação dos períodos com as massas.
+
+```{r echo=F, fig.height=3, fig.width=5, fig.align="center",cache=T}
+fitExp2 <- lm(PeriodoLog ~ MassaLog, data = dfExp2)
+dfPredExp2 <- data.frame("MassaLog"=seq(min(dfExp2$MassaLog),
+                                  max(dfExp2$MassaLog),
+                                  length.out = 100))
+exp2k <- round((4*pi^2)/(10^(2*coef(fitExp2)[1])), digits=3)
+dfPredExp2$PeriodoLog <- predict(fitExp2, newdata = dfPredExp2)
+ggplot(data=dfPredExp2, aes(x=MassaLog, y=PeriodoLog)) +
+       geom_line(colour = "blue") +
+       geom_point(data = dfExp2, aes(x=MassaLog, y=PeriodoLog)) +
+       xlab("Massa (g)") + ylab("$T_{md}$ ($s$)") +
+       theme_bw() + 
+       ggtitle("Relacao Periodo X Distensao")
+```
+
+A equação da reta obtida via regressão linear é:
+
+\begin{align}\label{eq:equacaoRetaExp2}
+log(T) = `r coef(fitExp2)[2]`*log(Massa) + `r coef(fitExp2)[1]`
+\end{align}
+
+Então, aplicando o valor do coeficiente linear da equação acima no equação \ref{eq:periodoConstanteElasticaLog4}, pode-se obter o valor de *k* para este experimento:
+
+\begin{align}\label{eq:kExperimento2}
+k = \frac{4\pi^2}{10^{2*`r coef(fitExp2)[1]`}} = `r exp2k` \;\pm `r exp2Erro` \text{ N/m}
+\end{align}
+
+O erro foi estimado utilizando a equação \ref{eq:erroExp2-2}.
+
+
+CONCLUSÃO
+===
+
+Após a realização dos experimentos e análise dos resultados obtidos, é possível responder algumas perguntas levantadas para cada experimento. 
+
+## Experimento 1:
+
+1  Que tipo de curva foi obtida ?
+
+Conforme apresentado na seção "5. Resultados", a curva obtida é uma reta. 
+
+2 De que forma seus resultados foram afetados por se considerar a massa desprezível ?
+
+Ao considerar a massa da mola desprezível, nao parece ter causado qualquer impacto no experimento 1 uma vez que os resultados obtidos estão de acordo com a teoria. 
+
+## Experimento 2:
+
+1 Compare o valor da constante elástica obtido pelo método estático com aquele obtido pelo método dinâmico. Faça comentários.
+
+Os valores de constante elástica obtidos via os dois experimentos possui em torno de 5 unidades de divergência. O da constante elástica pelo método estático é `r coeficienteDist` ± `r exp1Erro` N/m e pelo metódo dinámico é `r exp2k` ± `r exp2Erro` N/m. A equipe concluiu que tal divergência se deu devido a alguma etapa executada incorretamente. Uma possível causa deste problema talvez tenha sido a contagem dos ciclos no experimento II. No entanto, para entender melhor o que pode ter ocorrido de errado, a equipe necessitaria repetir os experimentos.
+
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+===

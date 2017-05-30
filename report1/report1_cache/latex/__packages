@@ -1,0 +1,9 @@
+base
+knitr
+ggplot2
+gridExtra
+tikzDevice
+xtable
+printr
+matrixStats
+scales
